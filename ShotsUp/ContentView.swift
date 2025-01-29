@@ -22,6 +22,8 @@ struct ContentView: View {
         return scene
 
     }
+    
+    
     var body: some View {
         ZStack {
             
@@ -30,16 +32,28 @@ struct ContentView: View {
             
             Rectangle()
                 .frame(width: width, height: height)
-            
-            Circle()
-                .foregroundStyle(.clear)
-                .frame(width: 50, height: 100)
-                .overlay(Circle().fill())
+                //.overlay{
+                    //TransparentView()
+                //}
+            }
+        
+        //TransparentView.makeClearHole(rect: CGRect(x: 100, y: 100, width: 200, height: 200))
             
         }
-        .padding()
     }
-    
+
+class TransparentView: UIView{
+    func makeClearHole(rect: CGRect){
+        let maskLayer = CAShapeLayer()
+        maskLayer.fillRule = CAShapeLayerFillRule.evenOdd
+        maskLayer.fillColor = UIColor.white.cgColor
+        
+        let pathToOverlay = UIBezierPath(rect: self.bounds)
+        pathToOverlay.append(UIBezierPath(rect: rect))
+        pathToOverlay.usesEvenOddFillRule = true
+        
+        self.layer.mask = maskLayer
+    }
 }
 
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
