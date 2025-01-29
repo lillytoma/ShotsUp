@@ -6,133 +6,76 @@
 //
 
 import SwiftUI
-
 import SpriteKit
-
-
-
-class GameScene: SKScene{
-
-let ballCount = 50
-
-let boundWidth = UIScreen.main.bounds.width
-
-let boundHeight = UIScreen.main.bounds.height
-
-let colors: [UIColor] = [.red,.green,.blue,.yellow,.orange]
-
-
-
-
-
-override func didMove(to view: SKView) {
-
-
-
-let cropper = SKCropNode()
-
-cropper.scene?.size = CGSize(width: boundWidth, height: boundHeight)
-
-
-
-for _ in 1...ballCount{
-
-let xRange = 15...boundWidth - 15
-
-let yRange = 15...boundHeight - 15
-
-let xPos = CGFloat.random(in: xRange)
-
-let yPos = CGFloat.random(in: yRange)
-
-let color = colors.randomElement() ?? .red
-
-
-
-//let ball = SKSpriteNode(color: colors.randomElement() ?? .red, size: CGSize(width: 35, height: 35))
-
-let ball = SKShapeNode(circleOfRadius: 10)
-
-ball.fillColor = color
-
-ball.strokeColor = color
-
-ball.position = CGPoint(x: xPos, y: yPos)
-
-
-
-addChild(ball)
-
-}
-
-let sheet = SKSpriteNode()
-
-sheet.size = CGSize(width: boundWidth*2, height: boundHeight*2)
-
-sheet.color = .black
-
-
-
-
-
-cropper.addChild(sheet)
-
-
-
-}
-
-
-
-override func update(_ currentTime: TimeInterval) {
-
-
-
-}
-
-
-
-}
-
-
-
+    
 struct ContentView: View {
+    private var width = UIScreen.main.bounds.width
+    private var height = UIScreen.main.bounds.height
+    
+    var scene: SKScene{ //making a scene so we can make GameScene visible
+        
+        let scene = GameScene() //calling gamescene, now the gamescene is called "scene"
+        //scene. is the accessor
+        scene.size = CGSize(width: scene.boundWidth, height: scene.boundHeight)
+        scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        
+        return scene
 
-
-
-var scene: SKScene{
-
-let scene = GameScene()
-
-scene.size = CGSize(width: scene.boundWidth, height: scene.boundHeight)
-
-scene.scaleMode = .fill
-
-
-
-return scene
-
+    }
+    var body: some View {
+        ZStack {
+            
+           SpriteView(scene: scene) //calling scene which calls GameScene
+                .frame(width: width, height: height)
+            
+            Rectangle()
+                .frame(width: width, height: height)
+            
+            Circle()
+                .foregroundStyle(.clear)
+                .frame(width: 50, height: 100)
+                .overlay(Circle().fill())
+            
+        }
+        .padding()
+    }
+    
 }
 
-
-
-var body: some View {
-
-VStack {
-
-SpriteView(scene: scene)
-
+class GameScene: SKScene{ //this view deos not show up until it gets called in content view
+    
+    //making different colored balls, it is an array that will consists of UIColors
+    let ballColors: [UIColor] = [.blue, .orange, .yellow, .red, .green, .purple]
+    
+    //UIScreen will change size depending on the device
+    var boundWidth = UIScreen.main.bounds.width
+    var boundHeight = UIScreen.main.bounds.height
+    
+    //self. is just pointing to the GameScene itself
+    override func didMove(to view: SKView){
+        
+        let width = Int(boundWidth / 2)
+        let height = Int(boundHeight / 2)
+        
+        for _ in 0...50{
+            
+            let ball = SKShapeNode(circleOfRadius: 15.0)
+            
+            ball.position = CGPoint(x: Int.random(in: -width...width), y: Int.random(in: -height...height))
+            
+            let color = ballColors.randomElement() ?? .blue//?? are optionals, meaning, it checks if it actually has it or else it will go to a default which you will have to set
+            let stroke: UIColor = .clear
+            
+            ball.fillColor = color
+            ball.strokeColor = stroke
+            
+            addChild(ball)
+        }
+    }
 }
-
-.padding()
-
-}
-
-}
-
-
 
 #Preview {
-
-ContentView()
-
+    
+    ContentView()
+    
 }
