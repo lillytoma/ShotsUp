@@ -7,7 +7,19 @@
 
 import SwiftUI
 import SpriteKit
+
+struct Window: Shape {
+    let size: CGSize
     
+    func path(in rect: CGRect) -> Path {
+        var path = Rectangle().path(in: rect)
+        
+        let origin = CGPoint(x: rect.midX - size.width / 2, y: rect.midY - size.height / 2)
+        path.addRoundedRect(in: CGRect(origin: origin, size: size), cornerSize: size)
+        return path
+    }
+}
+
 struct ContentView: View {
     private var width = UIScreen.main.bounds.width
     private var height = UIScreen.main.bounds.height
@@ -15,45 +27,38 @@ struct ContentView: View {
     var scene: SKScene{ //making a scene so we can make GameScene visible
         
         let scene = GameScene() //calling gamescene, now the gamescene is called "scene"
+        
         //scene. is the accessor
         scene.size = CGSize(width: scene.boundWidth, height: scene.boundHeight)
         scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
         return scene
-
+        
     }
     
     
     var body: some View {
+        //Color.black.ignoresSafeArea()
+        
         ZStack {
             
-           SpriteView(scene: scene) //calling scene which calls GameScene
+            SpriteView(scene: scene) //calling scene which calls GameScene
                 .frame(width: width, height: height)
-            
+
             Rectangle()
-                .frame(width: width, height: height)
-                //.overlay{
-                    //TransparentView()
-                //}
-            }
-        
-        //TransparentView.makeClearHole(rect: CGRect(x: 100, y: 100, width: 200, height: 200))
+                .foregroundColor(Color.black.opacity(1))
+                .mask(Window(size: CGSize(width: 200, height: 200)).fill(style: FillStyle(eoFill: true)))
+            
+            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 3)
+                .frame(width: 200, height: 200)
             
         }
-    }
-
-class TransparentView: UIView{
-    func makeClearHole(rect: CGRect){
-        let maskLayer = CAShapeLayer()
-        maskLayer.fillRule = CAShapeLayerFillRule.evenOdd
-        maskLayer.fillColor = UIColor.white.cgColor
         
-        let pathToOverlay = UIBezierPath(rect: self.bounds)
-        pathToOverlay.append(UIBezierPath(rect: rect))
-        pathToOverlay.usesEvenOddFillRule = true
         
-        self.layer.mask = maskLayer
+        
     }
+    
+    
 }
 
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
