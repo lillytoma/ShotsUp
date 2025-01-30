@@ -8,6 +8,7 @@
 import SwiftUI
 import SpriteKit
 
+
 struct Window: Shape {
     let size: CGSize
     
@@ -24,10 +25,11 @@ struct ContentView: View {
     private var width = UIScreen.main.bounds.width
     private var height = UIScreen.main.bounds.height
     
+    
+    
     var scene: SKScene{ //making a scene so we can make GameScene visible
-        
         let scene = GameScene() //calling gamescene, now the gamescene is called "scene"
-        
+        scene.backgroundColor = UIColor(Color.black)
         //scene. is the accessor
         scene.size = CGSize(width: scene.boundWidth, height: scene.boundHeight)
         scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -38,10 +40,8 @@ struct ContentView: View {
     
     
     var body: some View {
-        //Color.black.ignoresSafeArea()
-        
         ZStack {
-            
+            Color.black.ignoresSafeArea()
             SpriteView(scene: scene) //calling scene which calls GameScene
                 .frame(width: width, height: height)
 
@@ -53,12 +53,7 @@ struct ContentView: View {
                 .frame(width: 200, height: 200)
             
         }
-        
-        
-        
     }
-    
-    
 }
 
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
@@ -66,13 +61,14 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     //making different colored balls, it is an array that will consists of UIColors
     let ballColors: [UIColor] = [.blue, .orange, .yellow, .red, .green, .purple]
     
+    
     //UIScreen will change size depending on the device
     var boundWidth = UIScreen.main.bounds.width
     var boundHeight = UIScreen.main.bounds.height
     
     //self. is just pointing to the GameScene itself
     override func didMove(to view: SKView){
-        
+    
         let width = Int(boundWidth / 2)
         let height = Int(boundHeight / 2)
         
