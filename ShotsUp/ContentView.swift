@@ -53,6 +53,8 @@ struct ContentView: View {
             RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 3)
                 .frame(width: 250, height: 250)
             
+            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 0.5)
+                .frame(width: 160, height: 160)
         }
     }
 }
@@ -64,6 +66,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     
     //making different colored balls, it is an array that will consists of UIColors
     let ballColors: [UIColor] = [.blue, .orange, .yellow, .red, .green, .purple]
+    var visibleBalls: [SKNode] = []
     //let background = SKSpriteNode(imageNamed: "J8L2")
     //background.size = CGSize(width: 10, height: 10)
     
@@ -99,7 +102,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         groundborder.physicsBody!.collisionBitMask = 0b0001
         groundborder.physicsBody!.contactTestBitMask = 0b0001
         groundborder.physicsBody!.affectedByGravity = false
-        groundborder.physicsBody!.pinned = true
+        groundborder.physicsBody!.pinned = true    
         groundborder.physicsBody!.isDynamic = false
         
         addChild(groundborder)
@@ -109,14 +112,14 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
             let ball = SKShapeNode(circleOfRadius: 15.0)
             ball.name = "Ball"
             ball.position = CGPoint(x: Int.random(in: xPos), y: Int.random(in: yPos))
-            ball.physicsBody = SKPhysicsBody(circleOfRadius: 20)
+            ball.physicsBody = SKPhysicsBody(circleOfRadius: 18)
             ball.strokeColor = .white
            // ball.glowWidth = 5
             ball.physicsBody!.usesPreciseCollisionDetection = true
-            ball.physicsBody!.isDynamic = true
+            ball.physicsBody!.isDynamic = false
             ball.physicsBody!.affectedByGravity = false
             //ball.physicsBody!.mass = 0
-            ball.physicsBody!.linearDamping = 1
+            ball.physicsBody!.linearDamping = 0
             ball.physicsBody!.restitution = 0.2
             ball.physicsBody!.categoryBitMask = 0b0001
             ball.physicsBody!.collisionBitMask = 0b0001
@@ -124,7 +127,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
 
             
             let color = ballColors.randomElement() ?? .blue//?? are optionals, meaning, it checks if it actually has it or else it will go to a default which you will have to set
-            let stroke: UIColor = .white
+            let _: UIColor = .white
         
             
             ball.fillColor = color
@@ -137,10 +140,24 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         }
         
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("looking")
+        guard let touch = touches.first else {return}
+        let location = touch.location(in: self)
+        for node in self.nodes(at: location){ //looking for all nodes at the place the click was init
+            if node.name == "Ball" { //if the ball name is == Ball
+                node.removeFromParent() //parent is the game scene
+                
+            }
+        }
+    }
+    
     override func update(_ currentTime: TimeInterval) { //this function itself is a loop
         dt = pt - currentTime
         pt = currentTime
-        if at > 0.2{
+        FindBallInLens()
+        if at > 1{
             at = 0.0
             for ball in self.children{
                 if ball.name == "Ball"{
