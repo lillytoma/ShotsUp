@@ -21,47 +21,11 @@ struct Window: Shape {
     }
 }
 
-struct ContentView: View {
-    private var width = UIScreen.main.bounds.width
-    private var height = UIScreen.main.bounds.height
-    
-    
-    
-    var scene: SKScene{ //making a scene so we can make GameScene visible
-        let scene = GameScene() //calling gamescene, now the gamescene is called "scene"
-        scene.backgroundColor = UIColor(Color.black)
-        
-        //scene. is the accessor
-        scene.size = CGSize(width: scene.boundWidth, height: scene.boundHeight)
-        scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        
-        return scene
-        
-    }
-    
-    
-    var body: some View {
-        ZStack {
-            Color.black.ignoresSafeArea()
-            SpriteView(scene: scene) //calling scene which calls GameScene
-                .frame(width: width, height: height)
-
-            Rectangle()
-                .foregroundColor(Color.black.opacity(1))
-                .mask(Window(size: CGSize(width: 250, height: 250)).fill(style: FillStyle(eoFill: true)))
-            
-            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 3)
-                .frame(width: 250, height: 250)
-            
-            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 0.5)
-                .frame(width: 160, height: 160)
-        }
-    }
-}
 
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
     //creating a physics body
     
+    let myCircle = SKShapeNode(circleOfRadius: 160)
     
     
     //making different colored balls, it is an array that will consists of UIColors
@@ -80,6 +44,10 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     
     //self. is just pointing to the GameScene itself
     override func didMove(to view: SKView){
+        myCircle.strokeColor = .white
+        myCircle.lineWidth = 10
+        
+        addChild(myCircle)
         
         let width = Int(boundWidth / 2)
         let height = Int(boundHeight / 2)
@@ -113,10 +81,10 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
             ball.name = "Ball"
             ball.position = CGPoint(x: Int.random(in: xPos), y: Int.random(in: yPos))
             ball.physicsBody = SKPhysicsBody(circleOfRadius: 18)
-            ball.strokeColor = .white
+            ball.strokeColor = .clear
            // ball.glowWidth = 5
             ball.physicsBody!.usesPreciseCollisionDetection = true
-            ball.physicsBody!.isDynamic = false
+            ball.physicsBody!.isDynamic = true
             ball.physicsBody!.affectedByGravity = false
             //ball.physicsBody!.mass = 0
             ball.physicsBody!.linearDamping = 0
@@ -141,17 +109,34 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("looking")
-        guard let touch = touches.first else {return}
-        let location = touch.location(in: self)
-        for node in self.nodes(at: location){ //looking for all nodes at the place the click was init
-            if node.name == "Ball" { //if the ball name is == Ball
-                node.removeFromParent() //parent is the game scene
-                
-            }
-        }
-    }
+
+
+    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        print("looking")
+//        guard let touch = touches.first else {return}
+//        
+//        let location = touch.location(in: self)
+//        let touchedNodes = self.nodes(at: location)
+//        
+//        for node in touchedNodes{
+//            guard node is SKShapeNode else {return}
+//            if node.name == "Ball"{
+//                node.removeFromParent()
+//            }
+//        }
+//        }
+//    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        for touch in touches {
+//            let location = touch.location(in: self)
+//            let touchedNode = self.atPoint(location)
+//            if touchedNode.name == "Ball"{
+//                touchedNode.removeFromParent()
+//                break;
+//            }
+//        }
+//    }
     
     override func update(_ currentTime: TimeInterval) { //this function itself is a loop
         dt = pt - currentTime
@@ -168,6 +153,66 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
             at += abs(dt)
         }
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("looking")
+
+        let touch:UITouch = touches.first!
+    
+        let location = touch.location(in: self)
+
+        for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
+            if ball.name == "Ball" { //if the ball name is == Ball
+                ball.removeFromParent() //parent is the game scene
+                
+            }
+        }
+    }
+}
+
+struct ContentView: View {
+    private var width = UIScreen.main.bounds.width
+    private var height = UIScreen.main.bounds.height
+    
+    var scene: SKScene{ //making a scene so we can make GameScene visible
+        let scene = GameScene() //calling gamescene, now the gamescene is called "scene"
+        scene.backgroundColor = UIColor(Color.black)
+        
+        //scene. is the accessor
+        scene.size = CGSize(width: scene.boundWidth, height: scene.boundHeight)
+        scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        
+        return scene
+        
+    }
+    
+    
+    var body: some View {
+        
+        ZStack{
+            Color.black.ignoresSafeArea()
+        HStack{
+            VStack {
+                SpriteView(scene: scene) //calling scene which calls GameScene
+                    .frame(width: width, height: height)
+                    .padding(EdgeInsets(top: -45, leading: -45, bottom: -45, trailing: -45))
+                    .clipShape(Circle())
+                    
+                    
+                    //            Rectangle()
+                    //                .foregroundColor(Color.black.opacity(1))
+                    //                .mask(Window(size: CGSize(width: 250, height: 250)).fill(style: FillStyle(eoFill: true)))
+                    //
+                    //            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 3)
+                    //                .frame(width: 250, height: 250)
+                    //
+                    //            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 0.5)
+                    //                .frame(width: 160, height: 160)
+                }
+            }
+        }
+}
+    
 }
 
 #Preview {
