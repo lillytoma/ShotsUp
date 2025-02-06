@@ -16,14 +16,14 @@ extension GameScene{
                     guard let foundball = ball as? SKShapeNode else {return}
                     let colorFound = GetColorName(color: foundball.fillColor)
                     BallEntered(node: ball)
-                    //print(colorFound)
+                    print(colorFound)
                 }
                 else{ //if it is not in our scop, do nothing
                     BallLeft(node: ball)
                 }
             }
         }
-       // print(visibleBalls.count)
+        print(visibleBalls.count)
         
     }
     

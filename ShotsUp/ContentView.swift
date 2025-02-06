@@ -25,7 +25,7 @@ struct Window: Shape {
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
     //creating a physics body
     
-    let myCircle = SKShapeNode(circleOfRadius: 160)
+    let myCircle = SKShapeNode(circleOfRadius: 158)
     
     
     //making different colored balls, it is an array that will consists of UIColors
@@ -45,9 +45,8 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     //self. is just pointing to the GameScene itself
     override func didMove(to view: SKView){
         myCircle.strokeColor = .white
-        myCircle.lineWidth = 10
+        myCircle.lineWidth = 15
         
-        addChild(myCircle)
         
         let width = Int(boundWidth / 2)
         let height = Int(boundHeight / 2)
@@ -73,22 +72,22 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         groundborder.physicsBody!.pinned = true    
         groundborder.physicsBody!.isDynamic = false
         
-        addChild(groundborder)
+        addChild(groundborder)      
         
         for _ in 0...50{
             
-            let ball = SKShapeNode(circleOfRadius: 15.0)
+            let ball = SKShapeNode(circleOfRadius: 17.0)
             ball.name = "Ball"
             ball.position = CGPoint(x: Int.random(in: xPos), y: Int.random(in: yPos))
-            ball.physicsBody = SKPhysicsBody(circleOfRadius: 18)
+            ball.physicsBody = SKPhysicsBody(circleOfRadius: 23)
             ball.strokeColor = .clear
            // ball.glowWidth = 5
             ball.physicsBody!.usesPreciseCollisionDetection = true
-            ball.physicsBody!.isDynamic = true
+            ball.physicsBody!.isDynamic = false
             ball.physicsBody!.affectedByGravity = false
             //ball.physicsBody!.mass = 0
             ball.physicsBody!.linearDamping = 0
-            ball.physicsBody!.restitution = 0.2
+            ball.physicsBody!.restitution = 0
             ball.physicsBody!.categoryBitMask = 0b0001
             ball.physicsBody!.collisionBitMask = 0b0001
             ball.physicsBody!.contactTestBitMask = 0b0001
@@ -106,7 +105,8 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
 
             
         }
-        
+        addChild(myCircle)
+
     }
     
 
