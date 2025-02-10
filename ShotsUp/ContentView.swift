@@ -7,7 +7,9 @@
 
 import SwiftUI
 import SpriteKit
+import Observation
 
+var GameState = CurrentGameState()
 
 struct Window: Shape {
     let size: CGSize
@@ -143,6 +145,9 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         pt = currentTime
         FindBallInLens()
         if at > 1{
+            if GameState.CountDownTime > 0 {
+                GameState.CountDownTime -= 1
+            }
             at = 0.0
             for ball in self.children{
                 if ball.name == "Ball"{
@@ -192,13 +197,19 @@ struct ContentView: View {
         ZStack{
             Color.black.ignoresSafeArea()
         HStack{
-            VStack {
+            ZStack {
+         
                 SpriteView(scene: scene) //calling scene which calls GameScene
                     .frame(width: width, height: height)
                     .padding(EdgeInsets(top: -45, leading: -45, bottom: -45, trailing: -45))
                     .clipShape(Circle())
                     
+                Text("\(GameState.CountDownTime)")
+                    .font(.largeTitle)
+                    .foregroundStyle(.white)
+                    .padding(.bottom, 600)
                     
+                
                     //            Rectangle()
                     //                .foregroundColor(Color.black.opacity(1))
                     //                .mask(Window(size: CGSize(width: 250, height: 250)).fill(style: FillStyle(eoFill: true)))

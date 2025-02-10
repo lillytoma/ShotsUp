@@ -7,6 +7,21 @@
 
 import SwiftUI
 import SpriteKit
+import Observation
+
+@Observable class Player{
+    
+}
+
+@Observable class CurrentGameState{
+    var CountDownTime: Int = 30
+    var currentRound = 0
+    
+    func ResetGameState(){
+        currentRound = 0
+    }
+}
+
 
 extension GameScene{
     func FindBallInLens(){
