@@ -24,13 +24,15 @@ struct Window: Shape {
 
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
     //creating a physics body
-    
     let myCircle = SKShapeNode(circleOfRadius: 158)
-    
-    
+    var count = 0
+
     //making different colored balls, it is an array that will consists of UIColors
     let ballColors: [UIColor] = [.blue, .orange, .yellow, .red, .green, .purple]
     var visibleBalls: [SKNode] = []
+    
+    
+    var color: UIColor = .blue
     //let background = SKSpriteNode(imageNamed: "J8L2")
     //background.size = CGSize(width: 10, height: 10)
     
@@ -42,10 +44,15 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     var pt: TimeInterval = 0.0 //PreviousTime
     var at: TimeInterval = 0.0
     
+    
     //self. is just pointing to the GameScene itself
     override func didMove(to view: SKView){
+
         myCircle.strokeColor = .white
         myCircle.lineWidth = 15
+        
+        color = ballColors.randomElement() ?? .blue //assigns a random color to color
+        print(GetColorName(color: color)) //prints out the actual string
         
         
         let width = Int(boundWidth / 2)
@@ -88,7 +95,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
             //ball.physicsBody!.mass = 0
             ball.physicsBody!.linearDamping = 0
             ball.physicsBody!.restitution = 0
-            ball.physicsBody!.categoryBitMask = 0b0001
+            ball.physicsBody!.categoryBitMask = 0b0001 
             ball.physicsBody!.collisionBitMask = 0b0001
             ball.physicsBody!.contactTestBitMask = 0b0001
 
@@ -155,17 +162,27 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("looking")
-
+        
+        
         let touch:UITouch = touches.first!
     
         let location = touch.location(in: self)
 
+        
         for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
-            if ball.name == "Ball" { //if the ball name is == Ball
-                ball.removeFromParent() //parent is the game scene
+                if ball.name == "Ball" { //if the ball name is == Ball
+                guard let tappedBall = ball as? SKShapeNode else {return}
                 
+                if(tappedBall.fillColor == color){
+                    count += 1
+                }
+                
+                //print(tappedColor)
+                print(count)
+                ball.removeFromParent() //parent is the game scene
             }
+            
+        
         }
     }
 }
@@ -191,12 +208,19 @@ struct ContentView: View {
         
         ZStack{
             Color.black.ignoresSafeArea()
-        HStack{
-            VStack {
-                SpriteView(scene: scene) //calling scene which calls GameScene
-                    .frame(width: width, height: height)
-                    .padding(EdgeInsets(top: -45, leading: -45, bottom: -45, trailing: -45))
-                    .clipShape(Circle())
+            
+            HStack{
+                // VStack {
+                ZStack{
+                    
+                    SpriteView(scene: scene) //calling scene which calls GameScene
+                        .frame(width: width, height: height)
+                        .padding(EdgeInsets(top: -45, leading: -45, bottom: -45, trailing: -45))
+                        .clipShape(Circle())
+                    
+                    Text("Hit balls for points!")
+                        .frame(width: 100, height: 200)
+                        .padding(.bottom, 400)
                     
                     
                     //            Rectangle()
@@ -209,6 +233,7 @@ struct ContentView: View {
                     //            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 0.5)
                     //                .frame(width: 160, height: 160)
                 }
+                //  }
             }
         }
 }

@@ -9,7 +9,35 @@ import SwiftUI
 
 struct HomePage: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack{
+            ZStack{
+                
+                Color.black.ignoresSafeArea()
+                
+                
+                Image("HomePageBall")
+                    .frame(width: 200, height: 200)
+                
+                VStack{
+                    HStack{
+                        NavigationLink(destination: InstructionPage()){
+                            Image("InstButton")
+                                .padding(.leading, 250)
+
+
+                        }
+                    }
+                    Image("BallisticBlobsText")
+                        .padding(.bottom, 450)
+                    
+                        NavigationLink(destination: ContentView()) {
+                            Image("PlayButton")
+                                .padding(.bottom, 50)
+                        }
+                    
+                }
+            }
+        }
     }
 }
 

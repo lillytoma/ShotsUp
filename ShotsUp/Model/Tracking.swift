@@ -7,23 +7,24 @@
 
 import SwiftUI
 import SpriteKit
+import Observation
 
 extension GameScene{
     func FindBallInLens(){
         for ball in self.children {
             if ball.name == ("Ball"){
-                if (ball.position.x.magnitude < 80) && (ball.position.y.magnitude < 80){ //check if the ball is within our scope
+                if (ball.position.x.magnitude < 110) && (ball.position.y.magnitude < 110){ //check if the ball is within our scope
                     guard let foundball = ball as? SKShapeNode else {return}
                     let colorFound = GetColorName(color: foundball.fillColor)
                     BallEntered(node: ball)
-                    print(colorFound)
+                   // print(colorFound)
                 }
-                else{ //if it is not in our scop, do nothing
+                else{ //if it is not in our scope, do nothing
                     BallLeft(node: ball)
                 }
             }
         }
-        print(visibleBalls.count)
+        //print(visibleBalls.count)
         
     }
     
@@ -62,3 +63,4 @@ extension GameScene{
     }
 
 }
+
