@@ -9,18 +9,41 @@ import SwiftUI
 import SpriteKit
 import Observation
 
-@Observable class Player{
+
+//color selected
+
+// number needed of the colors selected
+
+@Observable class Player{ //includes the high score
     
 }
 
-@Observable class CurrentGameState{
+
+
+@Observable class CurrentGameState{ //count down time, rounds, color selected, how many needed
     var CountDownTime: Int = 30
     var currentRound = 0
+    var gameEnded = false
+
+    var numberPointsEarned: Int = 0
+    
+    var colorName: String = "red"
+    var actualColor: UIColor = .red
+    var numberOfBallsToHit: Int = .random(in: 1...2)
+    
+    var hitCounter: Int = 0
+    
+    func InitRound(){
+        
+    }
     
     func ResetGameState(){
         currentRound = 0
     }
 }
+
+
+
 
 
 extension GameScene{
@@ -31,14 +54,14 @@ extension GameScene{
                     guard let foundball = ball as? SKShapeNode else {return}
                     let colorFound = GetColorName(color: foundball.fillColor)
                     BallEntered(node: ball)
-                    print(colorFound)
+                    //print(colorFound)
                 }
                 else{ //if it is not in our scope, do nothing
                     BallLeft(node: ball)
                 }
             }
         }
-        print(visibleBalls.count)
+       // print(visibleBalls.count)
         
     }
     

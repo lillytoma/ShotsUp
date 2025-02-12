@@ -27,7 +27,7 @@ struct Window: Shape {
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
     //creating a physics body
     
-    let myCircle = SKShapeNode(circleOfRadius: 158)
+    let myCircle = SKShapeNode(circleOfRadius: UIScreen.main.bounds.width/2 - 45)
     var count = 0
 
     //making different colored balls, it is an array that will consists of UIColors
@@ -46,7 +46,8 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     var dt: TimeInterval = 0.0 //DeltaTime
     var pt: TimeInterval = 0.0 //PreviousTime
     var at: TimeInterval = 0.0
-    
+        
+
     
     //self. is just pointing to the GameScene itself
     override func didMove(to view: SKView){
@@ -54,7 +55,13 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         myCircle.strokeColor = .white
         myCircle.lineWidth = 15
         
+        
         color = ballColors.randomElement() ?? .blue //assigns a random color to color
+        
+        GameState.actualColor = color // get a random color
+        GameState.colorName = GetColorName(color: color) //set the random color in a string so we can display
+        
+        
         print(GetColorName(color: color)) //prints out the actual string
         
         
@@ -92,8 +99,8 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
             ball.physicsBody = SKPhysicsBody(circleOfRadius: 23)
             ball.strokeColor = .clear
            // ball.glowWidth = 5
-            ball.physicsBody!.usesPreciseCollisionDetection = true
-            ball.physicsBody!.isDynamic = false
+            ball.physicsBody!.usesPreciseCollisionDetection = true 
+            ball.physicsBody!.isDynamic = true
             ball.physicsBody!.affectedByGravity = false
             //ball.physicsBody!.mass = 0
             ball.physicsBody!.linearDamping = 0
@@ -152,9 +159,13 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         dt = pt - currentTime
         pt = currentTime
         FindBallInLens()
+        
         if at > 1{
             if GameState.CountDownTime > 0 {
                 GameState.CountDownTime -= 1
+            }
+            else{
+                GameState.gameEnded = true
             }
             at = 0.0
             for ball in self.children{
@@ -173,17 +184,25 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         let touch:UITouch = touches.first!
     
         let location = touch.location(in: self)
-
+ 
         for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
                 if ball.name == "Ball" { //if the ball name is == Ball
                 guard let tappedBall = ball as? SKShapeNode else {return}
                 
-                if(tappedBall.fillColor == color){
-                    count += 1
+                    if(tappedBall.fillColor == GameState.actualColor){
+                        GameState.hitCounter += 1
+                        GameState.numberPointsEarned += 5
+                        if(GameState.numberOfBallsToHit == GameState.hitCounter && GameState.CountDownTime > 0){
+                            GameState.CountDownTime += 15
+                            GameState.hitCounter = 0
+                            GameState.actualColor = ballColors.randomElement() ?? .blue
+                            GameState.colorName = GetColorName(color:GameState.actualColor)
+                            GameState.numberOfBallsToHit = Int.random(in: 5...10)
+                    }
                 }
                 
                 //print(tappedColor)
-                print(count)
+                    print(GameState.hitCounter)
                 ball.removeFromParent() //parent is the game scene
                 
             }
@@ -209,45 +228,56 @@ struct ContentView: View {
     
     
     var body: some View {
-        
-        ZStack{
-            Color.black.ignoresSafeArea()
-            
-            HStack{
-                // VStack {
-                ZStack{
-                    
-                    SpriteView(scene: scene) //calling scene which calls GameScene
-                        .frame(width: width, height: height)
-                        .padding(EdgeInsets(top: -45, leading: -45, bottom: -45, trailing: -45))
-                        .clipShape(Circle())
-                    
-                    Text("Hit balls for points!")
-                        .frame(width: 100, height: 200)
-                        .padding(.bottom, 400)
-                    
-                Text("\(GameState.CountDownTime)")
-                    .font(.largeTitle)
-                    .foregroundStyle(.white)
-                    .padding(.bottom, 600)
-                    
-                
-                    //            Rectangle()
-                    //                .foregroundColor(Color.black.opacity(1))
-                    //                .mask(Window(size: CGSize(width: 250, height: 250)).fill(style: FillStyle(eoFill: true)))
-                    //
-                    //            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 3)
-                    //                .frame(width: 250, height: 250)
-                    //
-                    //            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 0.5)
-                    //                .frame(width: 160, height: 160)
+            ZStack{
+                Color.black.ignoresSafeArea()
+                 
+                HStack{
+                    // VStack {
+                    ZStack{
+                        //NavigationLink("", destination: HomePage(), isActive: $GameState.gameEnded)
+                        //set up a naviagtion back to the homescreen when the timer ends
+                            SpriteView(scene: scene) //calling scene which calls GameScene
+                                .frame(width: width, height: height)
+                                .padding(EdgeInsets(top: -45, leading: -45, bottom: -45, trailing: -45))
+                                .clipShape(Circle())
+                        HStack{
+                            
+                            Text("\(GameState.hitCounter)/\(GameState.numberOfBallsToHit)")
+                                .padding(.bottom, 500)
+                            Text("Points Earned: \(GameState.numberPointsEarned)")
+                                .padding(.bottom, 500)
+                                
+                        }
+                        withAnimation(.easeOut(duration: 3.0).delay(2.0)){
+                            Text("Hit \(GameState.numberOfBallsToHit) \(GameState.colorName) balls for points!")
+                                    .frame(width: 300, height: 200)
+                                    .padding(.bottom, 400)
+                                    .foregroundStyle(.white)
+                        }
+                            
+                            Text("\(GameState.CountDownTime)")
+                                .font(.largeTitle)
+                                .foregroundStyle(.white)
+                                .padding(.bottom, 600)
+                            
+                        
+                        
+                        }
+                        
+                        //            Rectangle()
+                        //                .foregroundColor(Color.black.opacity(1))
+                        //                .mask(Window(size: CGSize(width: 250, height: 250)).fill(style: FillStyle(eoFill: true)))
+                        //
+                        //            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 3)
+                        //                .frame(width: 250, height: 250)
+                        //
+                        //            RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 0.5)
+                        //                .frame(width: 160, height: 160)
+                    }
+                    //  }
                 }
-                //  }
-            }
         }
-}
-    
-}
+    }
 
 #Preview {
     
