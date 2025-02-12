@@ -46,6 +46,9 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     var dt: TimeInterval = 0.0 //DeltaTime
     var pt: TimeInterval = 0.0 //PreviousTime
     var at: TimeInterval = 0.0
+    
+    
+    var dictionary: [SKNode] = []
         
 
     
@@ -78,9 +81,6 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         let groundborder = SKShapeNode(splinePoints: &border, count: border.count)
         groundborder.lineWidth = 5
         
-        let xPos = -width + 25...width - 25
-        let yPos = -height + 25...height - 25
-        
         groundborder.physicsBody = SKPhysicsBody(edgeChainFrom: groundborder.path!)
         groundborder.physicsBody!.categoryBitMask = 0b0001
         groundborder.physicsBody!.collisionBitMask = 0b0001
@@ -92,36 +92,11 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         addChild(groundborder)      
         
         for _ in 0...50{
-            
-            let ball = SKShapeNode(circleOfRadius: 17.0)
-            ball.name = "Ball"
-            ball.position = CGPoint(x: Int.random(in: xPos), y: Int.random(in: yPos))
-            ball.physicsBody = SKPhysicsBody(circleOfRadius: 23)
-            ball.strokeColor = .clear
-           // ball.glowWidth = 5
-            ball.physicsBody!.usesPreciseCollisionDetection = true 
-            ball.physicsBody!.isDynamic = true
-            ball.physicsBody!.affectedByGravity = false
-            //ball.physicsBody!.mass = 0
-            ball.physicsBody!.linearDamping = 0
-            ball.physicsBody!.restitution = 0
-            ball.physicsBody!.categoryBitMask = 0b0001 
-            ball.physicsBody!.collisionBitMask = 0b0001
-            ball.physicsBody!.contactTestBitMask = 0b0001
-
-            
-            let color = ballColors.randomElement() ?? .blue//?? are optionals, meaning, it checks if it actually has it or else it will go to a default which you will have to set
-            let _: UIColor = .white
-        
-            
-            ball.fillColor = color
-            //ball.strokeColor = .white
-            //addChild(background)
+            let ball = CreateBall(SpecifiedColor: .clear)
             addChild(ball)
-
-
-            
         }
+        
+        
         addChild(myCircle)
 
     }
@@ -177,7 +152,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
             at += abs(dt)
         }
     }
-    
+     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         
@@ -207,6 +182,44 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
                 
             }
         }
+    }
+    func CreateBall(SpecifiedColor: UIColor) -> SKShapeNode{
+        let width = Int(boundWidth / 2)
+        let height = Int(boundHeight / 2)
+        let color: UIColor
+        
+        let xPos = -width + 25...width - 25
+        let yPos = -height + 25...height - 25
+        
+        let ball = SKShapeNode(circleOfRadius: 17.0)
+        ball.name = "Ball"
+        ball.position = CGPoint(x: Int.random(in: xPos), y: Int.random(in: yPos))
+        ball.physicsBody = SKPhysicsBody(circleOfRadius: 23)
+        ball.strokeColor = .clear
+       // ball.glowWidth = 5
+        ball.physicsBody!.usesPreciseCollisionDetection = true
+        ball.physicsBody!.isDynamic = true
+        ball.physicsBody!.affectedByGravity = false
+        //ball.physicsBody!.mass = 0
+        ball.physicsBody!.linearDamping = 0
+        ball.physicsBody!.restitution = 0
+        ball.physicsBody!.categoryBitMask = 0b0001
+        ball.physicsBody!.collisionBitMask = 0b0001
+        ball.physicsBody!.contactTestBitMask = 0b0001
+        
+        
+        if SpecifiedColor != .clear{
+             color = SpecifiedColor
+        } else{
+            color = ballColors.randomElement() ?? .blue
+        }
+        //?? are optionals, meaning, it checks if it actually has it or else it will go to a default which you will have to set
+        let _: UIColor = .white
+    
+        
+        ball.fillColor = color
+        
+        return ball
     }
 }
 

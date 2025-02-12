@@ -50,6 +50,9 @@ extension GameScene{
     func FindBallInLens(){
         for ball in self.children {
             if ball.name == ("Ball"){
+                
+                
+
                 if (ball.position.x.magnitude < 110) && (ball.position.y.magnitude < 110){ //check if the ball is within our scope
                     guard let foundball = ball as? SKShapeNode else {return}
                     let colorFound = GetColorName(color: foundball.fillColor)

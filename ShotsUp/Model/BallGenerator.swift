@@ -6,13 +6,30 @@
 //
 
 import SwiftUI
+import SpriteKit
+import Observation
 
-struct BallGenerator: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+extension GameScene{
+    
+    func BallsInScene() -> Int{
+        var ballCount: [SKShapeNode] = []
+        for ball in self.children{
+                guard let ballNode = ball as? SKShapeNode else {continue}
+                if ballNode.name == "Ball" && ballNode.fillColor == GameState.actualColor{
+                    ballCount.append(ballNode)
+                }
+                
+            }
+        return ballCount.count
     }
-}
-
-#Preview {
-    BallGenerator()
+    
+    func generateBall(){ //get the color of the ball selected, get the amount that was selected
+        let ballCount = self.BallsInScene()
+        if ballCount < GameState.numberOfBallsToHit{
+            let difference = (GameState.numberOfBallsToHit - ballCount) + GameState.numberOfBallsToHit
+            for _ in 1...difference{
+                CreateBall(SpecifiedColor: GameState.actualColor)
+            }
+        }
+    }
 }
