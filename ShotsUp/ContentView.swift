@@ -24,12 +24,22 @@ struct Window: Shape {
 }
 
 
+class Haptics {
+    static let instance = Haptics()
+    
+    func impact(style: UIImpactFeedbackGenerator.FeedbackStyle){
+        let generator = UIImpactFeedbackGenerator(style: .heavy)
+        generator.impactOccurred()
+        
+    }
+}
+
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
     //creating a physics body
     
     let myCircle = SKShapeNode(circleOfRadius: UIScreen.main.bounds.width/2 - 45)
     var count = 0
-
+    
     //making different colored balls, it is an array that will consists of UIColors
     let ballColors: [UIColor] = [.blue, .orange, .yellow, .red, .green, .purple]
     var visibleBalls: [SKNode] = []
@@ -49,12 +59,10 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     
     
     var dictionary: [SKNode] = []
-        
-
     
     //self. is just pointing to the GameScene itself
     override func didMove(to view: SKView){
-
+        
         myCircle.strokeColor = .white
         myCircle.lineWidth = 15
         
@@ -86,10 +94,10 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         groundborder.physicsBody!.collisionBitMask = 0b0001
         groundborder.physicsBody!.contactTestBitMask = 0b0001
         groundborder.physicsBody!.affectedByGravity = false
-        groundborder.physicsBody!.pinned = true    
+        groundborder.physicsBody!.pinned = true
         groundborder.physicsBody!.isDynamic = false
         
-        addChild(groundborder)      
+        addChild(groundborder)
         
         for _ in 0...50{
             let ball = CreateBall(SpecifiedColor: .clear)
@@ -98,37 +106,37 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         
         
         addChild(myCircle)
-
+        
     }
     
-
-
     
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        print("looking")
-//        guard let touch = touches.first else {return}
-//        
-//        let location = touch.location(in: self)
-//        let touchedNodes = self.nodes(at: location)
-//        
-//        for node in touchedNodes{
-//            guard node is SKShapeNode else {return}
-//            if node.name == "Ball"{
-//                node.removeFromParent()
-//            }
-//        }
-//        }
-//    
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        for touch in touches {
-//            let location = touch.location(in: self)
-//            let touchedNode = self.atPoint(location)
-//            if touchedNode.name == "Ball"{
-//                touchedNode.removeFromParent()
-//                break;
-//            }
-//        }
-//    }
+    
+    
+    //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    //        print("looking")
+    //        guard let touch = touches.first else {return}
+    //
+    //        let location = touch.location(in: self)
+    //        let touchedNodes = self.nodes(at: location)
+    //
+    //        for node in touchedNodes{
+    //            guard node is SKShapeNode else {return}
+    //            if node.name == "Ball"{
+    //                node.removeFromParent()
+    //            }
+    //        }
+    //        }
+    //
+    //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    //        for touch in touches {
+    //            let location = touch.location(in: self)
+    //            let touchedNode = self.atPoint(location)
+    //            if touchedNode.name == "Ball"{
+    //                touchedNode.removeFromParent()
+    //                break;
+    //            }
+    //        }
+    //    }
     
     override func update(_ currentTime: TimeInterval) { //this function itself is a loop
         dt = pt - currentTime
@@ -152,37 +160,52 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
             at += abs(dt)
         }
     }
-     
+    
+    func clicked(shape: SKShapeNode){
+        
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         
         let touch:UITouch = touches.first!
-    
+        
         let location = touch.location(in: self)
- 
+        
         for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
-                if ball.name == "Ball" { //if the ball name is == Ball
+            if ball.name == "Ball" { //if the ball name is == Ball
+                Haptics.instance.impact(style: .heavy)
+
                 guard let tappedBall = ball as? SKShapeNode else {return}
                 
-                    if(tappedBall.fillColor == GameState.actualColor){
-                        GameState.hitCounter += 1
-                        GameState.numberPointsEarned += 5
-                        if(GameState.numberOfBallsToHit == GameState.hitCounter && GameState.CountDownTime > 0){
-                            GameState.CountDownTime += 15
-                            GameState.hitCounter = 0
-                            GameState.actualColor = ballColors.randomElement() ?? .blue
-                            GameState.colorName = GetColorName(color:GameState.actualColor)
-                            GameState.numberOfBallsToHit = Int.random(in: 5...10)
+
+                if(tappedBall.fillColor == GameState.actualColor){
+                    GameState.hitCounter += 1
+                    GameState.numberPointsEarned += 5
+                    if(GameState.numberOfBallsToHit == GameState.hitCounter && GameState.CountDownTime > 0){
+                        GameState.CountDownTime += 15
+                        GameState.hitCounter = 0
+                        GameState.actualColor = ballColors.randomElement() ?? .blue
+                        GameState.colorName = GetColorName(color:GameState.actualColor)
+                        GameState.numberOfBallsToHit = Int.random(in: 5...10)
                     }
                 }
-                
+//                else{
+//                    let generator = UIImpactFeedbackGenerator(style: .heavy)
+//                    generator.impactOccurred()
+//                    
+//                    let shake = SKAction.shake(duration: 0.3, amplitudeX: 50, amplitudeY: 50)
+//                    ball.run(shake)
+//                }
                 //print(tappedColor)
-                    print(GameState.hitCounter)
+                print(GameState.hitCounter)
                 ball.removeFromParent() //parent is the game scene
                 
             }
+            
         }
     }
+    
     func CreateBall(SpecifiedColor: UIColor) -> SKShapeNode{
         let width = Int(boundWidth / 2)
         let height = Int(boundHeight / 2)
@@ -196,7 +219,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         ball.position = CGPoint(x: Int.random(in: xPos), y: Int.random(in: yPos))
         ball.physicsBody = SKPhysicsBody(circleOfRadius: 23)
         ball.strokeColor = .clear
-       // ball.glowWidth = 5
+        // ball.glowWidth = 5
         ball.physicsBody!.usesPreciseCollisionDetection = true
         ball.physicsBody!.isDynamic = true
         ball.physicsBody!.affectedByGravity = false
@@ -209,17 +232,34 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         
         
         if SpecifiedColor != .clear{
-             color = SpecifiedColor
+            color = SpecifiedColor
         } else{
             color = ballColors.randomElement() ?? .blue
         }
         //?? are optionals, meaning, it checks if it actually has it or else it will go to a default which you will have to set
         let _: UIColor = .white
-    
+        
         
         ball.fillColor = color
         
         return ball
+    }
+}
+//    func impact(style: UIFeedbackGenerator.FeedbackStyle){
+//}
+extension SKAction{
+    class func shake(duration: CGFloat, amplitudeX: Int = 3, amplitudeY: Int = 3) -> SKAction{
+        let numberOfShakes = duration / 0.015 / 2.0
+        var actionsArray:[SKAction] = []
+        for _ in 1...Int(numberOfShakes){
+            let dx = CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX / 2)
+            let dy = CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY / 2)
+            let forward = SKAction.moveBy(x: dx, y: dy, duration: 0.015)
+            let reverse = forward.reversed()
+            actionsArray.append(forward)
+            actionsArray.append(reverse)
+        }
+        return SKAction.sequence(actionsArray)
     }
 }
 
