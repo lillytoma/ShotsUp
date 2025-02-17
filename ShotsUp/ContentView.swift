@@ -190,13 +190,13 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
                         GameState.numberOfBallsToHit = Int.random(in: 5...10)
                     }
                 }
-//                else{
-//                    let generator = UIImpactFeedbackGenerator(style: .heavy)
-//                    generator.impactOccurred()
-//                    
-//                    let shake = SKAction.shake(duration: 0.3, amplitudeX: 50, amplitudeY: 50)
-//                    ball.run(shake)
-//                }
+                else{
+                    let generator = UIImpactFeedbackGenerator(style: .heavy)
+                    generator.impactOccurred()
+                    
+                    let shake = SKAction.shake(duration: 0.3, amplitudeX: 50, amplitudeY: 50)
+                    ball.run(shake)
+                }
                 //print(tappedColor)
                 print(GameState.hitCounter)
                 ball.removeFromParent() //parent is the game scene
