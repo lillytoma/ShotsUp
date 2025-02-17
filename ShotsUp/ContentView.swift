@@ -223,6 +223,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     }
 }
 
+
 struct ContentView: View {
     private var width = UIScreen.main.bounds.width
     private var height = UIScreen.main.bounds.height
