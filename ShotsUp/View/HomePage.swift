@@ -10,31 +10,21 @@ import SwiftUI
 struct HomePage: View {
     var body: some View {
         NavigationStack{
-            ZStack{
-                
-                Color.black.ignoresSafeArea()
-                
-                
-                Image("HomePageBall")
-                    .frame(width: 200, height: 200)
-                
                 VStack{
                     HStack{
+                        Spacer()
+                        
                         NavigationLink(destination: InstructionPage()){
                             Image("InstButton")
-                                .padding(.leading, 250)
-
-
                         }
+                        
                     }
                     Image("BallisticBlobsText")
-                        .padding(.bottom, 450)
                     
+                    Image("HomePageBall")
+                    Spacer()
                         NavigationLink(destination: ContentView()) {
                             Image("PlayButton")
-                                .padding(.bottom, 50)
-                        }
-                    
                 }
             }
         }
