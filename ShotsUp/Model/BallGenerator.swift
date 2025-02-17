@@ -28,7 +28,9 @@ extension GameScene{
         if ballCount < GameState.numberOfBallsToHit{
             let difference = (GameState.numberOfBallsToHit - ballCount) + GameState.numberOfBallsToHit
             for _ in 1...difference{
-                CreateBall(SpecifiedColor: GameState.actualColor)
+                let moreBalls = CreateBall(SpecifiedColor: GameState.actualColor)
+                addChild(moreBalls)
+                
             }
         }
     }

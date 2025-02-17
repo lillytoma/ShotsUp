@@ -23,7 +23,6 @@ struct Window: Shape {
     }
 }
 
-
 class Haptics {
     static let instance = Haptics()
     
@@ -109,35 +108,6 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         
     }
     
-    
-    
-    
-    //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    //        print("looking")
-    //        guard let touch = touches.first else {return}
-    //
-    //        let location = touch.location(in: self)
-    //        let touchedNodes = self.nodes(at: location)
-    //
-    //        for node in touchedNodes{
-    //            guard node is SKShapeNode else {return}
-    //            if node.name == "Ball"{
-    //                node.removeFromParent()
-    //            }
-    //        }
-    //        }
-    //
-    //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    //        for touch in touches {
-    //            let location = touch.location(in: self)
-    //            let touchedNode = self.atPoint(location)
-    //            if touchedNode.name == "Ball"{
-    //                touchedNode.removeFromParent()
-    //                break;
-    //            }
-    //        }
-    //    }
-    
     override func update(_ currentTime: TimeInterval) { //this function itself is a loop
         dt = pt - currentTime
         pt = currentTime
@@ -161,9 +131,6 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         }
     }
     
-    func clicked(shape: SKShapeNode){
-        
-    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
@@ -174,12 +141,13 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         
         for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
             if ball.name == "Ball" { //if the ball name is == Ball
-                Haptics.instance.impact(style: .heavy)
 
                 guard let tappedBall = ball as? SKShapeNode else {return}
                 
 
                 if(tappedBall.fillColor == GameState.actualColor){
+                    Haptics.instance.impact(style: .heavy)
+
                     GameState.hitCounter += 1
                     GameState.numberPointsEarned += 5
                     if(GameState.numberOfBallsToHit == GameState.hitCounter && GameState.CountDownTime > 0){
@@ -188,15 +156,11 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
                         GameState.actualColor = ballColors.randomElement() ?? .blue
                         GameState.colorName = GetColorName(color:GameState.actualColor)
                         GameState.numberOfBallsToHit = Int.random(in: 5...10)
+                        generateBall()
                     }
+    
                 }
-                else{
-                    let generator = UIImpactFeedbackGenerator(style: .heavy)
-                    generator.impactOccurred()
-                    
-                    let shake = SKAction.shake(duration: 0.3, amplitudeX: 50, amplitudeY: 50)
-                    ball.run(shake)
-                }
+                
                 //print(tappedColor)
                 print(GameState.hitCounter)
                 ball.removeFromParent() //parent is the game scene
@@ -247,21 +211,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
 }
 //    func impact(style: UIFeedbackGenerator.FeedbackStyle){
 //}
-extension SKAction{
-    class func shake(duration: CGFloat, amplitudeX: Int = 3, amplitudeY: Int = 3) -> SKAction{
-        let numberOfShakes = duration / 0.015 / 2.0
-        var actionsArray:[SKAction] = []
-        for _ in 1...Int(numberOfShakes){
-            let dx = CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX / 2)
-            let dy = CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY / 2)
-            let forward = SKAction.moveBy(x: dx, y: dy, duration: 0.015)
-            let reverse = forward.reversed()
-            actionsArray.append(forward)
-            actionsArray.append(reverse)
-        }
-        return SKAction.sequence(actionsArray)
-    }
-}
+
 
 
 struct ContentView: View {
