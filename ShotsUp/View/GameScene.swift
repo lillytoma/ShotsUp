@@ -109,7 +109,8 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         dt = pt - currentTime
         pt = currentTime
         FindBallInLens()
-        
+        myCircle.strokeColor = GameState.actualColor
+
         if at > 1{
             if GameState.CountDownTime > 0 {
                 GameState.CountDownTime -= 1
@@ -152,10 +153,16 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
                         GameState.hitCounter = 0
                         GameState.actualColor = ballColors.randomElement() ?? .blue
                         GameState.colorName = GetColorName(color:GameState.actualColor)
-                        GameState.numberOfBallsToHit = Int.random(in: 5...10)
+                        GameState.numberOfBallsToHit = Int.random(in: 4...5) + 1
                         generateBall()
                     }
     
+                }
+                else{
+                    if(GameState.hitCounter > 0 && GameState.numberPointsEarned > 0){
+                        GameState.hitCounter -= 1
+                        GameState.numberPointsEarned -= 5
+                    }
                 }
                 
                 //print(tappedColor)
