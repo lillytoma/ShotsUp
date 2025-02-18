@@ -197,7 +197,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         ball.physicsBody = SKPhysicsBody(circleOfRadius: 23)
         ball.strokeColor = .clear
         ball.physicsBody!.usesPreciseCollisionDetection = true
-        ball.physicsBody!.isDynamic = false
+        ball.physicsBody!.isDynamic = true
         ball.physicsBody!.affectedByGravity = false
         ball.physicsBody!.linearDamping = 0
         ball.physicsBody!.restitution = 0
