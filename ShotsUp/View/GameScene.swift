@@ -115,7 +115,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
             if GameState.CountDownTime > 0 {
                 GameState.CountDownTime -= 1
             }
-            else{
+            else if GameState.gameEnded == false{
                 GameState.gameEnded = true
             }
             at = 0.0

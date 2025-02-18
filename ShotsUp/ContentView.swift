@@ -44,8 +44,10 @@ struct ContentView: View {
                             
                             Text("\(GameState.hitCounter)/\(GameState.numberOfBallsToHit)")
                                 .padding(.bottom, 500)
+                                .foregroundStyle(.white)
                             Text("Points Earned: \(GameState.numberPointsEarned)")
                                 .padding(.bottom, 500)
+                                .foregroundStyle(.white)
                                 
                         }
                         withAnimation(.easeOut(duration: 3.0).delay(2.0)){
@@ -60,7 +62,27 @@ struct ContentView: View {
                                 .foregroundStyle(.white)
                                 .padding(.bottom, 600)
                             
-                        
+                        Button{
+                            
+                            if GameState.gameEnded == true{
+                                GameState.ResetGameState()
+                            }
+                            
+                            
+                            
+                        }label:{
+                            
+                            Text("Play Again")
+                            
+                                .font(.largeTitle)
+                            
+                                .bold()
+                            
+                                .foregroundStyle(!GameState.gameEnded ? .clear : .white)
+                            
+                            
+                            
+                        }
                         
                         }
                     

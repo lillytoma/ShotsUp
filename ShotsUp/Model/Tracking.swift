@@ -18,7 +18,7 @@ import Observation
     
 }
 
-
+let ballColors: [UIColor] = [.blue, .orange, .yellow, .red, .green, .purple]
 
 @Observable class CurrentGameState{ //count down time, rounds, color selected, how many needed
     var CountDownTime: Int = 30
@@ -39,6 +39,32 @@ import Observation
     
     func ResetGameState(){
         currentRound = 0
+        CountDownTime = 30
+        hitCounter = 0
+        numberOfBallsToHit = .random(in: 1...2)
+        
+        actualColor = ballColors.randomElement() ?? .blue
+        colorName = GetColorName(color: actualColor)
+        gameEnded = false
+    }
+    
+    func GetColorName(color: UIColor) -> String{
+        switch color{
+        case ballColors[0]:
+            return "blue"
+        case ballColors[1]:
+            return "orange"
+        case ballColors[2]:
+            return "yellow"
+        case ballColors[3]:
+            return "red"
+        case ballColors[4]:
+            return "green"
+        case ballColors[5]:
+            return "purple"
+        default:
+            return "not found"
+        }
     }
 }
 
@@ -50,9 +76,6 @@ extension GameScene{
     func FindBallInLens(){
         for ball in self.children {
             if ball.name == ("Ball"){
-                
-                
-
                 if (ball.position.x.magnitude < 110) && (ball.position.y.magnitude < 110){ //check if the ball is within our scope
                     guard let foundball = ball as? SKShapeNode else {return}
                     _ = GetColorName(color: foundball.fillColor)
