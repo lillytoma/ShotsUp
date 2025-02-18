@@ -30,6 +30,15 @@ class Haptics {
     }
 }
 
+
+//class Ball: SKShapeNode{
+//    let var padding = 30;
+//    
+//    override func contains(_ point: CGPoint) -> Bool {
+//        
+//    }
+//}
+
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
     //creating a physics body
     
@@ -138,36 +147,37 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         
         for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
             if ball.name == "Ball" { //if the ball name is == Ball
-
+                
                 guard let tappedBall = ball as? SKShapeNode else {return}
-                
-
-                if(tappedBall.fillColor == GameState.actualColor){
-                    Haptics.instance.impact(style: .heavy)
-
-                    GameState.hitCounter += 1
-                    GameState.numberPointsEarned += 5
-                    if(GameState.numberOfBallsToHit == GameState.hitCounter && GameState.CountDownTime > 0){
-                        GameState.CountDownTime += 15
-                        GameState.hitCounter = 0
-                        GameState.actualColor = ballColors.randomElement() ?? .blue
-                        GameState.colorName = GetColorName(color:GameState.actualColor)
-                        GameState.numberOfBallsToHit = Int.random(in: 4...5) + 1
-                        generateBall()
+                if(GameState.gameEnded == false){
+                    if(tappedBall.fillColor == GameState.actualColor){
+                        Haptics.instance.impact(style: .heavy)
+                        
+                        GameState.hitCounter += 1
+                        GameState.numberPointsEarned += 5
+                        if(GameState.numberOfBallsToHit == GameState.hitCounter && GameState.CountDownTime > 0){
+                            GameState.CountDownTime += 15
+                            GameState.hitCounter = 0
+                            GameState.actualColor = ballColors.randomElement() ?? .blue
+                            GameState.colorName = GetColorName(color:GameState.actualColor)
+                            GameState.numberOfBallsToHit = Int.random(in: 3...5) + 1
+                            generateBall()
+                        }
+                        
                     }
-    
-                }
-                else{
-                    if(GameState.hitCounter > 0 && GameState.numberPointsEarned > 0){
-                        GameState.hitCounter -= 1
-                        GameState.numberPointsEarned -= 5
+                    else{
+                        if(GameState.hitCounter > 0 && GameState.numberPointsEarned > 0){
+                            GameState.hitCounter -= 1
+                            GameState.numberPointsEarned -= 5
+                        }
                     }
+                    
+                    //print(tappedColor)
+                    print(GameState.hitCounter)
+                    ball.removeFromParent() //parent is the game scene
+                    
                 }
-                
-                //print(tappedColor)
-                print(GameState.hitCounter)
-                ball.removeFromParent() //parent is the game scene
-                
+
             }
             
         }
@@ -186,11 +196,9 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         ball.position = CGPoint(x: Int.random(in: xPos), y: Int.random(in: yPos))
         ball.physicsBody = SKPhysicsBody(circleOfRadius: 23)
         ball.strokeColor = .clear
-        // ball.glowWidth = 5
         ball.physicsBody!.usesPreciseCollisionDetection = true
-        ball.physicsBody!.isDynamic = true
+        ball.physicsBody!.isDynamic = false
         ball.physicsBody!.affectedByGravity = false
-        //ball.physicsBody!.mass = 0
         ball.physicsBody!.linearDamping = 0
         ball.physicsBody!.restitution = 0
         ball.physicsBody!.categoryBitMask = 0b0001
