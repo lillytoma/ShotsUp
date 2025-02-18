@@ -43,6 +43,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     //creating a physics body
     
     let myCircle = SKShapeNode(circleOfRadius: UIScreen.main.bounds.width/2 - 45)
+    var inverseShot: Bool = true
     var count = 0
     
     //making different colored balls, it is an array that will consists of UIColors
@@ -67,7 +68,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     
     //self. is just pointing to the GameScene itself
     override func didMove(to view: SKView){
-        
+        Haptics.instance.impact(style: .heavy)
         myCircle.strokeColor = .white
         myCircle.lineWidth = 15
         
@@ -129,7 +130,19 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
             at = 0.0
             for ball in self.children{
                 if ball.name == "Ball"{
-                    ball.physicsBody!.applyImpulse(CGVector(dx: Int.random(in: -30...30), dy: Int.random(in: -30...30)))
+                    guard let currentBall = ball as? SKShapeNode else {continue}
+                    if currentBall.fillColor == GameState.actualColor{
+                        let ImpulseStrength = CGFloat.random(in: 15...60)
+                        let x = ball.position.x
+                        let y = ball.position.y
+                        let ballMagnitude = (x * x + y * y).squareRoot()
+                        let one: CGFloat = inverseShot ? 1 : -1
+                        let ToCenterPosition = CGVector(dx: (x/ballMagnitude * one) * ImpulseStrength, dy: (y/ballMagnitude * one) * ImpulseStrength)
+                        ball.physicsBody!.applyImpulse(ToCenterPosition)
+                        inverseShot.toggle()
+                    }else{
+                        ball.physicsBody!.applyImpulse(CGVector(dx: Int.random(in: -30...30), dy: Int.random(in: -30...30)))
+                    }
                 }
             }
         }else{
