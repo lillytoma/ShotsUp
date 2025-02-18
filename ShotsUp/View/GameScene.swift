@@ -63,13 +63,12 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         myCircle.lineWidth = 15
         
         
-        color = ballColors.randomElement() ?? .blue //assigns a random color to color
-        
-        GameState.actualColor = color // get a random color
-        GameState.colorName = GetColorName(color: color) //set the random color in a string so we can display
-        
-        
-        print(GetColorName(color: color)) //prints out the actual string
+        if(GameState.gameEnded != false && GameState.CountDownTime > 0){
+            color = ballColors.randomElement() ?? .blue //assigns a random color to color
+            GameState.actualColor = color // get a random color
+            GameState.colorName = GetColorName(color: color) //set the random color in a string so we can display
+ //         print(GetColorName(color: color)) //prints out the actual string, console
+        }
         
         
         let width = Int(boundWidth / 2)
