@@ -95,6 +95,23 @@ struct ContentView: View {
                     }
                 }
         }
+    private func audioPlayerFunc(ShouldPlay: Bool) {
+            if let url = Bundle.main.url(forResource: "BackgroundMusic", withExtension: "m4a"){
+                do {
+                    audioPlayer = try AVAudioPlayer(contentsOf: url)
+                    audioPlayer?.numberOfLoops = -1
+                    if(ShouldPlay == true){
+                        audioPlayer?.play()
+                    }
+                    else{
+                        audioPlayer?.pause()
+                    }
+                } catch {
+                    // couldn't load file :(
+                    print("Error \(error)")
+                }
+            }
+        }
     
     }
 
