@@ -40,7 +40,7 @@ struct ContentView: View {
                                 .frame(width: width, height: height)
                                 .padding(EdgeInsets(top: -45, leading: -45, bottom: -45, trailing: -45))
                                 .clipShape(Circle())
-                        
+                     
                             VStack{
                                 HStack{
                                     Spacer()
@@ -76,28 +76,10 @@ struct ContentView: View {
                                 .foregroundStyle(.white)
                                 .padding(.bottom, 530)
                                 .bold()
-                            
-                        Button{
-                            
-                            if GameState.gameEnded == true{
-                                GameState.ResetGameState()
-                            }
-                            
-                            
-                            
-                        }label:{
-                            
-                            Text("Play Again")
-                            
-                                .font(.largeTitle)
-                            
-                                .bold()
-                            
-                                .foregroundStyle(!GameState.gameEnded ? .clear : .white)
-                            
-                            
-                            
+                        if GameState.gameEnded {
+                            PlayAgainView()
                         }
+                        
                         
                         }
                     
@@ -106,6 +88,33 @@ struct ContentView: View {
         }
     
     }
+
+struct PlayAgainView: View{
+    
+    var body: some View{
+        Button{
+            
+            if GameState.gameEnded == true{
+                GameState.ResetGameState()
+            }
+            
+            
+            
+        }label:{
+            
+            Text("Play Again")
+            
+                .font(.largeTitle)
+            
+                .bold()
+            
+              //  .foregroundStyle(!GameState.gameEnded ? .clear : .white)
+                .foregroundStyle(.white)
+            
+            
+        }
+    }
+}
 
 #Preview {
     

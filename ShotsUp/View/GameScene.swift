@@ -56,6 +56,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     //background.size = CGSize(width: 10, height: 10)
     
     //UIScreen will change size depending on the device
+    var NewLocation = CGPoint(x:0 , y:0)
     var boundWidth = UIScreen.main.bounds.width
     var boundHeight = UIScreen.main.bounds.height
     
@@ -155,12 +156,11 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        
         let touch:UITouch = touches.first!
         
         let location = touch.location(in: self)
         if GameState.gameEnded {return}
-    
+        
         for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
             if ball.name == "Ball" { //if the ball name is == Ball
                 
@@ -175,9 +175,13 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
                         GameState.numberPointsEarned += 5
                         
                         if(GameState.numberOfBallsToHit == GameState.hitCounter && GameState.CountDownTime > 0){
+                            var color: UIColor
                             GameState.CountDownTime += 15
                             GameState.hitCounter = 0
-                            GameState.actualColor = ballColors.randomElement() ?? .blue
+                            repeat{
+                                color = ballColors.randomElement() ?? .blue
+                            }while color == GameState.actualColor
+                            GameState.actualColor = color
                             GameState.colorName = GetColorName(color:GameState.actualColor)
                             GameState.numberOfBallsToHit = Int.random(in: 2...5 + GameState.highestRandomNumber)
                             generateBall()
