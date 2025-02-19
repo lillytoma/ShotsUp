@@ -32,6 +32,11 @@ extension GameScene{
                 addChild(moreBalls)
                 
             }
+        }else if(ballCount < 5){
+            for _ in 1...GameState.numberOfBallsToHit + 5{
+                let moreBalls = CreateBall(SpecifiedColor: GameState.actualColor)
+                addChild(moreBalls)
+            }
         }
     }
 }

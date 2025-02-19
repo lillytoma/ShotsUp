@@ -16,15 +16,21 @@ struct HomePage: View {
                         
                         NavigationLink(destination: InstructionPage()){
                             Image("InstButton")
+                                
                         }
                         
                     }
                     Image("BallisticBlobsText")
+                        .resizable()
+                        .frame(width: 300, height: 120)
+                        .padding(.top, 10)
                     
                     Image("HomePageBall")
+                        .padding(.top, 20)
                     Spacer()
                         NavigationLink(destination: ContentView()) {
                             Image("PlayButton")
+                                .padding(.bottom, 50)
                 }
             }
         }

@@ -40,27 +40,40 @@ struct ContentView: View {
                                 .frame(width: width, height: height)
                                 .padding(EdgeInsets(top: -45, leading: -45, bottom: -45, trailing: -45))
                                 .clipShape(Circle())
-                        HStack{
+                        
+                            VStack{
+                                HStack{
+                                    Spacer()
+                                Text("Score: \(GameState.numberPointsEarned)")
+                                    .foregroundStyle(.white)
+                                    .font(.title2)
+                                    .padding()
+                                    .bold()
+                            }
+                                Spacer()
                             
-                            Text("\(GameState.hitCounter)/\(GameState.numberOfBallsToHit)")
-                                .padding(.bottom, 500)
-                                .foregroundStyle(.white)
-                            Text("Points Earned: \(GameState.numberPointsEarned)")
-                                .padding(.bottom, 500)
-                                .foregroundStyle(.white)
-                                
+
                         }
                         withAnimation(.easeOut(duration: 3.0).delay(2.0)){
-                            Text("Hit \(GameState.numberOfBallsToHit) \(GameState.colorName) balls for points!")
+                            HStack{
+                                Text("Hit")
+                                    .font(.title3)
+                                Text("\(GameState.numberOfBallsToHit - GameState.hitCounter) \(GameState.colorName)")
+                                    .foregroundStyle(Color(GameState.actualColor))
+                                    .bold()
+                                    .font(.title)
+                                Text("balls!")
+                                    .font(.title3)
+                            }
                                     .frame(width: 300, height: 200)
                                     .padding(.bottom, 400)
-                                    .foregroundStyle(.white)
                         }
                             
                             Text("\(GameState.CountDownTime)")
-                                .font(.largeTitle)
+                            .font(.custom("", size: 70))
                                 .foregroundStyle(.white)
-                                .padding(.bottom, 600)
+                                .padding(.bottom, 530)
+                                .bold()
                             
                         Button{
                             

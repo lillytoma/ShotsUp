@@ -24,9 +24,8 @@ let ballColors: [UIColor] = [.blue, .orange, .yellow, .red, .green, .purple]
     var CountDownTime: Int = 30
     var currentRound = 0
     var gameEnded = false
-
+    var highestRandomNumber: Int = 0
     var numberPointsEarned: Int = 0
-    
     var colorName: String = "red"
     var actualColor: UIColor = .red
     var numberOfBallsToHit: Int = .random(in: 1...2)
@@ -43,6 +42,7 @@ let ballColors: [UIColor] = [.blue, .orange, .yellow, .red, .green, .purple]
         hitCounter = 0
         numberOfBallsToHit = .random(in: 1...2)
         numberPointsEarned = 0
+        highestRandomNumber = 0
         
         actualColor = ballColors.randomElement() ?? .blue
         colorName = GetColorName(color: actualColor)

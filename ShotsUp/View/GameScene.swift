@@ -104,9 +104,11 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         
         addChild(groundborder)
         
-        for _ in 0...50{
-            let ball = CreateBall(SpecifiedColor: .clear)
-            addChild(ball)
+        for color in ballColors{
+            for _ in 1...8{
+                let ball = CreateBall(SpecifiedColor: color)
+                addChild(ball)
+            }
         }
         
         
@@ -158,7 +160,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         
         let location = touch.location(in: self)
         if GameState.gameEnded {return}
-
+    
         for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
             if ball.name == "Ball" { //if the ball name is == Ball
                 
@@ -166,15 +168,18 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
 
                     if(tappedBall.fillColor == GameState.actualColor){
                         Haptics.instance.impact(style: .heavy)
-                        
+                        if(GameState.highestRandomNumber < 6){
+                            GameState.highestRandomNumber += 1
+                        }
                         GameState.hitCounter += 1
                         GameState.numberPointsEarned += 5
+                        
                         if(GameState.numberOfBallsToHit == GameState.hitCounter && GameState.CountDownTime > 0){
                             GameState.CountDownTime += 15
                             GameState.hitCounter = 0
                             GameState.actualColor = ballColors.randomElement() ?? .blue
                             GameState.colorName = GetColorName(color:GameState.actualColor)
-                            GameState.numberOfBallsToHit = Int.random(in: 3...5) + 1
+                            GameState.numberOfBallsToHit = Int.random(in: 2...5 + GameState.highestRandomNumber)
                             generateBall()
                         }
                         
@@ -189,7 +194,9 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
                     //print(tappedColor)
                     print(GameState.hitCounter)
                     ball.removeFromParent() //parent is the game scene
-                    
+                    let newBall = CreateBall(SpecifiedColor: tappedBall.fillColor)
+                    addChild(newBall)
+                    print(self.children.count)
 
             }
             
