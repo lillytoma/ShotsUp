@@ -26,16 +26,11 @@ extension GameScene{
     func generateBall(){ //get the color of the ball selected, get the amount that was selected
         let ballCount = self.BallsInScene()
         if ballCount < GameState.numberOfBallsToHit{
-            let difference = (GameState.numberOfBallsToHit - ballCount) + GameState.numberOfBallsToHit
+            let difference = (GameState.numberOfBallsToHit - ballCount) + 5
             for _ in 1...difference{
                 let moreBalls = CreateBall(SpecifiedColor: GameState.actualColor)
                 addChild(moreBalls)
                 
-            }
-        }else if(ballCount < 5){
-            for _ in 1...GameState.numberOfBallsToHit + 5{
-                let moreBalls = CreateBall(SpecifiedColor: GameState.actualColor)
-                addChild(moreBalls)
             }
         }
     }

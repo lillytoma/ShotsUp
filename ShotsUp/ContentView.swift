@@ -58,12 +58,14 @@ struct ContentView: View {
                             HStack{
                                 Text("Hit")
                                     .font(.title3)
+                                    .foregroundStyle(.white)
                                 Text("\(GameState.numberOfBallsToHit - GameState.hitCounter) \(GameState.colorName)")
                                     .foregroundStyle(Color(GameState.actualColor))
                                     .bold()
                                     .font(.title)
                                 Text("balls!")
                                     .font(.title3)
+                                    .foregroundStyle(.white)
                             }
                                     .frame(width: 300, height: 200)
                                     .padding(.bottom, 400)
