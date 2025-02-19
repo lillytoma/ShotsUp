@@ -157,12 +157,13 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         let touch:UITouch = touches.first!
         
         let location = touch.location(in: self)
-        
+        if GameState.gameEnded {return}
+
         for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
             if ball.name == "Ball" { //if the ball name is == Ball
                 
                 guard let tappedBall = ball as? SKShapeNode else {return}
-                if(GameState.gameEnded == false){
+
                     if(tappedBall.fillColor == GameState.actualColor){
                         Haptics.instance.impact(style: .heavy)
                         
@@ -189,7 +190,6 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
                     print(GameState.hitCounter)
                     ball.removeFromParent() //parent is the game scene
                     
-                }
 
             }
             
