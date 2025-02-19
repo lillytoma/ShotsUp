@@ -225,9 +225,11 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         invisible.strokeColor = .clear
         invisible.name = "InvisibleBall"
         ball.name = "Ball"
+        ball.glowWidth = 10
         ball.position = CGPoint(x: Int.random(in: xPos), y: Int.random(in: yPos))
         ball.physicsBody = SKPhysicsBody(circleOfRadius: 23)
-        ball.strokeColor = .clear
+        ball.strokeColor = SpecifiedColor
+        ball.alpha = 0.5
         ball.physicsBody!.usesPreciseCollisionDetection = true
         ball.physicsBody!.isDynamic = true
         ball.physicsBody!.affectedByGravity = false
