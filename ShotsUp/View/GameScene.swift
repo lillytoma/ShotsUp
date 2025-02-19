@@ -31,14 +31,6 @@ class Haptics {
 }
 
 
-//class Ball: SKShapeNode{
-//    let var padding = 30;
-//    
-//    override func contains(_ point: CGPoint) -> Bool {
-//        
-//    }
-//}
-
 class GameScene: SKScene{ //this view deos not show up until it gets called in content view
     //creating a physics body
     
@@ -49,6 +41,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     //making different colored balls, it is an array that will consists of UIColors
     let ballColors: [UIColor] = [.blue, .orange, .yellow, .red, .green, .purple]
     var visibleBalls: [SKNode] = []
+    
     
     
     var color: UIColor = .blue
@@ -69,6 +62,8 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
     
     //self. is just pointing to the GameScene itself
     override func didMove(to view: SKView){
+        let errorFeedback = UINotificationFeedbackGenerator()
+        errorFeedback.prepare()
         Haptics.instance.impact(style: .heavy)
         myCircle.strokeColor = .white
         myCircle.lineWidth = 15
@@ -159,12 +154,13 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         let touch:UITouch = touches.first!
         
         let location = touch.location(in: self)
+        
         if GameState.gameEnded {return}
         
         for ball in self.nodes(at: location){ //looking for all nodes at the place the click was init
-            if ball.name == "Ball" { //if the ball name is == Ball
+            if ball.name == "InvisibleBall" { //if the ball name is == Ball
                 
-                guard let tappedBall = ball as? SKShapeNode else {return}
+                guard let tappedBall = ball.parent as? SKShapeNode else {return}
 
                     if(tappedBall.fillColor == GameState.actualColor){
                         Haptics.instance.impact(style: .heavy)
@@ -189,18 +185,26 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
                         
                     }
                     else{
+                        let errorFeedback = UINotificationFeedbackGenerator()
+
+                        errorFeedback.notificationOccurred(.warning)
+                        errorFeedback.notificationOccurred(.warning)
+                        errorFeedback.notificationOccurred(.warning)
+
+                        
                         if(GameState.hitCounter > 0 && GameState.numberPointsEarned > 0){
                             GameState.hitCounter -= 1
                             GameState.numberPointsEarned -= 5
                         }
                     }
                     
-                    //print(tappedColor)
+                    print(GetColorName(color:tappedBall.fillColor))
+                    print(self.children.count)
                     print(GameState.hitCounter)
-                    ball.removeFromParent() //parent is the game scene
+                    tappedBall.removeFromParent() //parent is the game scene
                     let newBall = CreateBall(SpecifiedColor: tappedBall.fillColor)
                     addChild(newBall)
-                    print(self.children.count)
+                    
 
             }
             
@@ -216,6 +220,10 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         let yPos = -height + 25...height - 25
         
         let ball = SKShapeNode(circleOfRadius: 17.0)
+        let invisible = SKShapeNode(circleOfRadius: 20.0)
+        invisible.fillColor = .clear
+        invisible.strokeColor = .clear
+        invisible.name = "InvisibleBall"
         ball.name = "Ball"
         ball.position = CGPoint(x: Int.random(in: xPos), y: Int.random(in: yPos))
         ball.physicsBody = SKPhysicsBody(circleOfRadius: 23)
@@ -240,6 +248,8 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
         
         
         ball.fillColor = color
+        
+        ball.addChild(invisible)
         
         return ball
     }

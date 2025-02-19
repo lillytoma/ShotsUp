@@ -8,10 +8,13 @@
 import SwiftUI
 import SpriteKit
 import Observation
+import AVFoundation
 
 var GameState = CurrentGameState()
 
 struct ContentView: View {
+    @State private var audioPlayer:AVAudioPlayer?
+    private var shouldPlay: Bool = true
     private var width = UIScreen.main.bounds.width
     private var height = UIScreen.main.bounds.height
     
@@ -40,7 +43,13 @@ struct ContentView: View {
                                 .frame(width: width, height: height)
                                 .padding(EdgeInsets(top: -45, leading: -45, bottom: -45, trailing: -45))
                                 .clipShape(Circle())
-                     
+                                .onAppear(){
+                                    audioPlayerFunc(ShouldPlay: true)
+                                }
+                                .onDisappear(){
+                                    audioPlayerFunc(ShouldPlay: false)
+                                }
+                        
                             VStack{
                                 HStack{
                                     Spacer()
@@ -52,7 +61,7 @@ struct ContentView: View {
                             }
                                 Spacer()
                             
-
+ 
                         }
                         withAnimation(.easeOut(duration: 3.0).delay(2.0)){
                             HStack{
