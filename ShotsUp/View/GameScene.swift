@@ -172,7 +172,7 @@ class GameScene: SKScene{ //this view deos not show up until it gets called in c
                         
                         if(GameState.numberOfBallsToHit == GameState.hitCounter && GameState.CountDownTime > 0){
                             var color: UIColor
-                            GameState.CountDownTime += 15
+                            GameState.CountDownTime += 10
                             GameState.hitCounter = 0
                             repeat{
                                 color = ballColors.randomElement() ?? .blue
